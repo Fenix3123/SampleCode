@@ -1,0 +1,16 @@
+@PostMapping("/deleteMovie")
+	@ResponseBody
+	public String deleteOneMovie2 (@AuthenticationPrincipal User user, @RequestBody String moviename) {
+		User user2 = userService.findById(user.getId());
+		int namesize = moviename.length();
+		String movieNameActual = moviename.substring(1, namesize-1);
+		user2.setMovies(user2.getMovies().stream()
+									   .filter(movie ->{
+										   String str1 = String.valueOf(movie.getName());
+										   String str2 = String.valueOf(movieNameActual);
+										   return !str1.equals(str2);
+									   })
+									   .collect(Collectors.toList()));
+		userService.saveUser(user2);
+		return "/dashboard";
+	}
